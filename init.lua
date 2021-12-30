@@ -301,6 +301,40 @@ lsp_installer.on_server_ready(function(server)
       },
     }
 
+  elseif server.name == "pylsp" then
+    opts.on_new_config = lspconfig_util.add_hook_after(
+      opts.on_new_config,
+      function(config, root_dir)
+	vim.list_extend(config.cmd, {'-v'})
+	-- TODO: factor this part into a separate file
+	-- TODO: check if the default root_dir understands our monorepo
+	-- Check for MN sterling
+	local sterling_venv = lspconfig_util.path.join(root_dir, 'nixd/opt/python3.6')
+	if lspconfig_util.path.is_dir(sterling_venv) then
+	  --print('using the sterling_venv:', sterling_venv)
+	  config.settings = vim.tbl_deep_extend('force', config.settings, {
+	    pylsp = {
+	      plugins = {
+		jedi = {
+		  environment = sterling_venv,
+		},
+		pyflakes = {
+		  enabled = false,
+		},
+		pycodestyle = {
+		  enabled = false,
+		  --[[ Using ignore made things noisier!
+		  ignore = {
+		    'E202',
+		  },
+		  --]]
+		},
+	      },
+	    },
+	  })
+	end
+      end)
+
   end
 
   server:setup(opts)
