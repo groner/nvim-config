@@ -56,6 +56,7 @@ require('packer').startup(function()
 
   -- Collection of configurations for built-in LSP client
   use 'neovim/nvim-lspconfig'
+  use 'williamboman/nvim-lsp-installer'
 
   -- Autocompletion plugin
   use 'hrsh7th/nvim-cmp'
@@ -234,7 +235,7 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- LSP settings
-local lspconfig = require 'lspconfig'
+local lsp_installer = require 'nvim-lsp-installer'
 local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -263,49 +264,47 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
--- Enable the following language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-  }
-end
-
--- Example custom server
 -- Make runtime files discoverable to the server
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
--- -- Without lua lsp server installed this only generates errors.
--- lspconfig.sumneko_lua.setup {
---   cmd = { vim.fn.getenv 'HOME' .. '/.local/bin/sumneko_lua/bin/Linux/lua-language-server' },
---   on_attach = on_attach,
---   capabilities = capabilities,
---   settings = {
---     Lua = {
---       runtime = {
---         -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
---         version = 'LuaJIT',
---         -- Setup your lua path
---         path = runtime_path,
---       },
---       diagnostics = {
---         -- Get the language server to recognize the `vim` global
---         globals = { 'vim' },
---       },
---       workspace = {
---         -- Make the server aware of Neovim runtime files
---         library = vim.api.nvim_get_runtime_file('', true),
---       },
---       -- Do not send telemetry data containing a randomized but unique identifier
---       telemetry = {
---         enable = false,
---       },
---     },
---   },
--- }
+local lspconfig_util = require('lspconfig.util')
+
+lsp_installer.on_server_ready(function(server)
+  local opts = {
+    on_attach = on_attach,
+    capabilities = capabilities,
+  }
+
+  if server.name == "sumneko_lua" then
+    opts.settings = {
+      Lua = {
+	runtime = {
+	  -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+	  version = 'LuaJIT',
+	  -- Setup your lua path
+	  path = runtime_path,
+	},
+	diagnostics = {
+	  -- Get the language server to recognize the `vim` global
+	  globals = { 'vim' },
+	},
+	workspace = {
+	  -- Make the server aware of Neovim runtime files
+	  library = vim.api.nvim_get_runtime_file('', true),
+	},
+	-- Do not send telemetry data containing a randomized but unique identifier
+	telemetry = {
+	  enable = false,
+	},
+      },
+    }
+
+  end
+
+  server:setup(opts)
+end)
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
