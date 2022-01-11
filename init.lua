@@ -349,6 +349,12 @@ local luasnip = require 'luasnip'
 -- nvim-cmp setup
 local cmp = require 'cmp'
 cmp.setup {
+  enabled = function()
+    local ccc = require 'cmp.config.context'
+    local ts_comment = ccc.in_treesitter_capture('comment') == true
+    local vs_comment = ccc.in_syntax_group('Comment')
+    return not ts_comment and not vs_comment
+  end,
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
