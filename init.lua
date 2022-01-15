@@ -322,11 +322,16 @@ lsp_installer.on_server_ready(function(server)
 		pyflakes = {
 		  enabled = false,
 		},
+		mccabe = {
+		  enabled = false,
+		},
 		pycodestyle = {
 		  enabled = false,
-		  --[[ Using ignore made things noisier!
+		  ---[[ Using ignore made things noisier!
 		  ignore = {
-		    'E202',
+		    'E302', -- expected 2 blank lines, found 1
+		    'E305', -- expected 2 blank lines after class or function definition, found 1
+		    'E501', -- line too long (80 > 79 characters)
 		  },
 		  --]]
 		},
