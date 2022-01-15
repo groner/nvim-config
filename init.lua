@@ -305,6 +305,7 @@ lsp_installer.on_server_ready(function(server)
     opts.on_new_config = lspconfig_util.add_hook_after(
       opts.on_new_config,
       function(config, root_dir)
+	config.cmd = vim.deepcopy(config.cmd)
 	vim.list_extend(config.cmd, {'-v'})
 	-- TODO: factor this part into a separate file
 	-- TODO: check if the default root_dir understands our monorepo
