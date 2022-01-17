@@ -12,9 +12,6 @@ vim.cmd [[
   augroup end
 ]]
 
--- attach module configs here
-local setups = {}
-
 local use = require('packer').use
 require('packer').startup(function()
   -- Package manager
@@ -25,13 +22,19 @@ require('packer').startup(function()
   -- Fugitive-companion to interact with github
   use 'tpope/vim-rhubarb'
   -- "gc" to comment visual regions/lines
-  use { 'numToStr/Comment.nvim', config = setups.Comment }
+  use { 'numToStr/Comment.nvim', config = function()
+      require('Comment').setup {}
+    end,
+  }
 
   -- Automatic tags management
   use 'ludovicchabant/vim-gutentags'
 
   -- Which key
-  use { 'folke/which-key.nvim', config = setups.which_key }
+  use { 'folke/which-key.nvim', config = function()
+      require('which-key').setup {}
+    end,
+  }
 
   -- Enable repeating supported plugin maps with "."
   use 'tpope/vim-repeat'
@@ -40,18 +43,18 @@ require('packer').startup(function()
   use 'tpope/vim-surround'
 
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = setups.telescope }
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
 
   use 'EdenEast/nightfox.nvim'
 
   -- Theme inspired by Atom
   use 'mjlbach/onedark.nvim'
   -- Fancier statusline
-  use { 'nvim-lualine/lualine.nvim', config = setups.lualine }
+  use { 'nvim-lualine/lualine.nvim' }
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
   -- Add git related info in the signs columns and popups
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = setups.gitsigns }
+  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
 
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use 'nvim-treesitter/nvim-treesitter'
@@ -118,16 +121,14 @@ vim.o.termguicolors = true
 vim.cmd [[colorscheme nordfox]]
 
 --Set statusbar
-function setups.lualine()
-  require('lualine').setup {
-    options = {
-      icons_enabled = false,
-      theme = 'nord',
-      component_separators = '|',
-      section_separators = '',
-    },
-  }
-end
+require('lualine').setup {
+  options = {
+    icons_enabled = false,
+    theme = 'nord',
+    component_separators = '|',
+    section_separators = '',
+  },
+}
 
 --Remap space as leader key
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
@@ -146,18 +147,6 @@ vim.cmd [[
   augroup end
 ]]
 
--- Comment.nvim
-function setups.Comment()
-  require('Comment').setup {
-  }
-end
-
--- Which key
-function setups.which_key()
-  require('which-key').setup {
-  }
-end
-
 -- Map blankline
 vim.g.indent_blankline_char = '┊'
 vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
@@ -165,34 +154,30 @@ vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
 
 -- Gitsigns
-function setups.gitsigns()
-  require('gitsigns').setup {
-    signs = {
-      add = { hl = 'GitGutterAdd', text = '+' },
-      change = { hl = 'GitGutterChange', text = '~' },
-      delete = { hl = 'GitGutterDelete', text = '_' },
-      topdelete = { hl = 'GitGutterDelete', text = '‾' },
-      changedelete = { hl = 'GitGutterChange', text = '~' },
-    },
-  }
-end
+require('gitsigns').setup {
+  signs = {
+    add = { text = '+' },
+    change = { text = '~' },
+    delete = { text = '_' },
+    topdelete = { text = '‾' },
+    changedelete = { text = '~' },
+  },
+}
 
 -- Telescope
-function setups.telescope()
-  require('telescope').setup {
-    defaults = {
-      mappings = {
-	i = {
-	  ['<C-u>'] = false,
-	  ['<C-d>'] = false,
-	},
-      },
-      file_ignore_patterns = {
-	'node_modules',
+require('telescope').setup {
+  defaults = {
+    mappings = {
+      i = {
+        ['<C-u>'] = false,
+        ['<C-d>'] = false,
       },
     },
-  }
-end
+    file_ignore_patterns = {
+      'node_modules',
+    },
+  },
+}
 
 --Add leader shortcuts
 vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').buffers({sort_lastused = true})<CR>]], { noremap = true, silent = true })
