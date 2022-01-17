@@ -84,7 +84,7 @@ vim.cmd [[
 
     au FileType html,xml                setl sw=2
     au FileType css                     setl sw=2
-    au FileType javascript,typescript   setl sw=2
+    au FileType javascript,typescript,typescriptreact setl sw=2
     au FileType lua			setl sw=2
   augroup end
 ]]
