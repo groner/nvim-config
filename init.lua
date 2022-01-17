@@ -12,6 +12,9 @@ vim.cmd [[
   augroup end
 ]]
 
+-- attach module configs here
+local setups = {}
+
 local use = require('packer').use
 require('packer').startup(function()
   -- Package manager
@@ -27,7 +30,7 @@ require('packer').startup(function()
   use 'ludovicchabant/vim-gutentags'
 
   -- Which key
-  use 'folke/which-key.nvim'
+  use { 'folke/which-key.nvim', config = setups.which_key }
 
   -- Enable repeating supported plugin maps with "."
   use 'tpope/vim-repeat'
@@ -36,7 +39,7 @@ require('packer').startup(function()
   use 'tpope/vim-surround'
 
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = setups.telescope }
 
   use 'EdenEast/nightfox.nvim'
 
@@ -47,7 +50,7 @@ require('packer').startup(function()
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
   -- Add git related info in the signs columns and popups
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = setups.gitsigns }
 
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use 'nvim-treesitter/nvim-treesitter'
@@ -139,8 +142,10 @@ vim.cmd [[
 ]]
 
 -- Which key
-require('which-key').setup {
-}
+function setups.which_key()
+  require('which-key').setup {
+  }
+end
 
 -- Map blankline
 vim.g.indent_blankline_char = '┊'
