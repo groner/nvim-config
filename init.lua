@@ -25,7 +25,8 @@ require('packer').startup(function()
   -- Fugitive-companion to interact with github
   use 'tpope/vim-rhubarb'
   -- "gc" to comment visual regions/lines
-  use 'tpope/vim-commentary'
+  use { 'numToStr/Comment.nvim', config = setups.Comment }
+
   -- Automatic tags management
   use 'ludovicchabant/vim-gutentags'
 
@@ -44,9 +45,9 @@ require('packer').startup(function()
   use 'EdenEast/nightfox.nvim'
 
   -- Theme inspired by Atom
-  use 'joshdick/onedark.vim'
+  use 'mjlbach/onedark.nvim'
   -- Fancier statusline
-  use 'itchyny/lightline.vim'
+  use { 'nvim-lualine/lualine.nvim', config = setups.lualine }
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
   -- Add git related info in the signs columns and popups
@@ -114,15 +115,19 @@ vim.wo.signcolumn = 'yes'
 
 --Set colorscheme (order is important here)
 vim.o.termguicolors = true
-vim.g.onedark_terminal_italics = 2
 vim.cmd [[colorscheme nordfox]]
 
 --Set statusbar
-vim.g.lightline = {
-  colorscheme = 'nightfox',
-  active = { left = { { 'mode', 'paste' }, { 'gitbranch', 'readonly', 'filename', 'modified' } } },
-  component_function = { gitbranch = 'fugitive#head' },
-}
+function setups.lualine()
+  require('lualine').setup {
+    options = {
+      icons_enabled = false,
+      theme = 'nord',
+      component_separators = '|',
+      section_separators = '',
+    },
+  }
+end
 
 --Remap space as leader key
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
@@ -141,6 +146,12 @@ vim.cmd [[
   augroup end
 ]]
 
+-- Comment.nvim
+function setups.Comment()
+  require('Comment').setup {
+  }
+end
+
 -- Which key
 function setups.which_key()
   require('which-key').setup {
@@ -154,30 +165,35 @@ vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
 
 -- Gitsigns
-require('gitsigns').setup {
-  signs = {
-    add = { hl = 'GitGutterAdd', text = '+' },
-    change = { hl = 'GitGutterChange', text = '~' },
-    delete = { hl = 'GitGutterDelete', text = '_' },
-    topdelete = { hl = 'GitGutterDelete', text = '‾' },
-    changedelete = { hl = 'GitGutterChange', text = '~' },
-  },
-}
+function setups.gitsigns()
+  require('gitsigns').setup {
+    signs = {
+      add = { hl = 'GitGutterAdd', text = '+' },
+      change = { hl = 'GitGutterChange', text = '~' },
+      delete = { hl = 'GitGutterDelete', text = '_' },
+      topdelete = { hl = 'GitGutterDelete', text = '‾' },
+      changedelete = { hl = 'GitGutterChange', text = '~' },
+    },
+  }
+end
 
 -- Telescope
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
+function setups.telescope()
+  require('telescope').setup {
+    defaults = {
+      mappings = {
+	i = {
+	  ['<C-u>'] = false,
+	  ['<C-d>'] = false,
+	},
+      },
+      file_ignore_patterns = {
+	'node_modules',
       },
     },
-    file_ignore_patterns = {
-      'node_modules',
-    },
-  },
-}
+  }
+end
+
 --Add leader shortcuts
 vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').buffers({sort_lastused = true})<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>sf', [[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]], { noremap = true, silent = true })
@@ -242,11 +258,15 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
+-- Diagnostic keymaps
+vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
+
 -- LSP settings
 local lsp_installer = require 'nvim-lsp-installer'
 local on_attach = function(_, bufnr)
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
   local opts = { noremap = true, silent = true }
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
@@ -260,10 +280,6 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
   vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
 end
@@ -409,3 +425,5 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+-- vim: sw=2 et
