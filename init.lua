@@ -93,6 +93,11 @@ vim.cmd [[
   augroup end
 ]]
 
+-- This is slow, and something is activating it even though the python lsp
+-- stuff runs out of a separate venv.
+vim.g.loaded_python_provider = 0
+vim.g.loaded_python3_provider = 0
+
 --Set highlight on search
 vim.o.hlsearch = false
 
