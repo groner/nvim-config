@@ -124,6 +124,15 @@ vim.wo.signcolumn = 'yes'
 vim.o.termguicolors = true
 vim.cmd [[colorscheme nordfox]]
 
+-- Improve cursor visibility, this fixes the cursor being hard to see when it's
+-- over the muted indent marks.
+vim.o.guicursor = table.concat({
+  'n-v-c-sm:block',
+  'i-ci-ve:ver25',
+  'r-cr-o:hor20',
+  'a:Cursor/lCursor',
+}, ',')
+
 --Set statusbar
 require('lualine').setup {
   options = {
