@@ -12,8 +12,7 @@ vim.cmd [[
   augroup end
 ]]
 
-local use = require('packer').use
-require('packer').startup(function()
+require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
