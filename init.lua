@@ -53,7 +53,19 @@ require('packer').startup(function(use)
   -- Theme inspired by Atom
   use 'mjlbach/onedark.nvim'
   -- Fancier statusline
-  use { 'nvim-lualine/lualine.nvim' }
+  use {
+    'nvim-lualine/lualine.nvim',
+    config = function()
+      require('lualine').setup {
+        options = {
+          icons_enabled = false,
+          theme = 'nord',
+          component_separators = '|',
+          section_separators = '',
+        },
+      }
+    end,
+  }
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
   -- Add git related info in the signs columns and popups
@@ -154,16 +166,6 @@ vim.o.guicursor = table.concat({
   'r-cr-o:hor20',
   'a:Cursor/lCursor',
 }, ',')
-
---Set statusbar
-require('lualine').setup {
-  options = {
-    icons_enabled = false,
-    theme = 'nord',
-    component_separators = '|',
-    section_separators = '',
-  },
-}
 
 --Remap space as leader key
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
