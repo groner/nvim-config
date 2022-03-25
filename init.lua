@@ -29,7 +29,7 @@ require('packer').startup(function(use)
   }
 
   -- Automatic tags management
-  use 'ludovicchabant/vim-gutentags'
+  --use 'ludovicchabant/vim-gutentags'
 
   -- Which key
   use {
