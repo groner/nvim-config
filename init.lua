@@ -21,7 +21,9 @@ require('packer').startup(function(use)
   -- Fugitive-companion to interact with github
   use 'tpope/vim-rhubarb'
   -- "gc" to comment visual regions/lines
-  use { 'numToStr/Comment.nvim', config = function()
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
       require('Comment').setup {}
     end,
   }
@@ -30,7 +32,9 @@ require('packer').startup(function(use)
   use 'ludovicchabant/vim-gutentags'
 
   -- Which key
-  use { 'folke/which-key.nvim', config = function()
+  use {
+    'folke/which-key.nvim',
+    config = function()
       require('which-key').setup {}
     end,
   }
