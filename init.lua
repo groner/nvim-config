@@ -55,6 +55,7 @@ require('packer').startup(function(use)
   -- Fancier statusline
   use {
     'nvim-lualine/lualine.nvim',
+    after = { 'nvim-dap' },
     config = function()
       require('lualine').setup {
         options = {
@@ -63,6 +64,9 @@ require('packer').startup(function(use)
           component_separators = '|',
           section_separators = '',
         },
+        sections = {
+          lualine_b = { 'branch', 'diff', 'diagnostics', 'dap' },
+        }
       }
     end,
   }
