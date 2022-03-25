@@ -74,6 +74,24 @@ require('packer').startup(function(use)
   use 'saadparwaiz1/cmp_luasnip'
   -- Snippets plugin
   use 'L3MON4D3/LuaSnip'
+
+  -- Debug Adapter Protocol
+  use {
+    'mfussenegger/nvim-dap',
+    after = { 'which-key.nvim' },
+    config = [[require('user.plugin.dap').setup()]],
+  }
+  use {
+    'mfussenegger/nvim-dap-python',
+    after = { 'nvim-dap' },
+    config = function()
+      require('dap-python').setup()
+    end,
+  }
+  use {
+    'rcarriga/nvim-dap-ui',
+    after = { 'nvim-dap' },
+  }
 end)
 
 -- Kg changes
