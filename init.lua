@@ -127,6 +127,7 @@ vim.cmd [[
     au FileType css                     setl sw=2
     au FileType javascript,typescript,typescriptreact setl sw=2
     au FileType lua			setl sw=2
+    au FileType terraform               setl sw=2
   augroup end
 ]]
 
