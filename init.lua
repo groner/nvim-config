@@ -126,7 +126,7 @@ vim.cmd [[
     au FileType html,xml                setl sw=2
     au FileType css                     setl sw=2
     au FileType javascript,typescript,typescriptreact setl sw=2
-    au FileType lua			setl sw=2
+    au FileType lua                     setl sw=2
     au FileType terraform               setl sw=2
   augroup end
 ]]
@@ -331,24 +331,24 @@ lsp_installer.on_server_ready(function(server)
   if server.name == "sumneko_lua" then
     opts.settings = {
       Lua = {
-	runtime = {
-	  -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-	  version = 'LuaJIT',
-	  -- Setup your lua path
-	  path = runtime_path,
-	},
-	diagnostics = {
-	  -- Get the language server to recognize the `vim` global
-	  globals = { 'vim' },
-	},
-	workspace = {
-	  -- Make the server aware of Neovim runtime files
-	  library = vim.api.nvim_get_runtime_file('', true),
-	},
-	-- Do not send telemetry data containing a randomized but unique identifier
-	telemetry = {
-	  enable = false,
-	},
+        runtime = {
+          -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+          version = 'LuaJIT',
+          -- Setup your lua path
+          path = runtime_path,
+        },
+        diagnostics = {
+          -- Get the language server to recognize the `vim` global
+          globals = { 'vim' },
+        },
+        workspace = {
+          -- Make the server aware of Neovim runtime files
+          library = vim.api.nvim_get_runtime_file('', true),
+        },
+        -- Do not send telemetry data containing a randomized but unique identifier
+        telemetry = {
+          enable = false,
+        },
       },
     }
 
@@ -356,40 +356,40 @@ lsp_installer.on_server_ready(function(server)
     opts.on_new_config = lspconfig_util.add_hook_after(
       opts.on_new_config,
       function(config, root_dir)
-	config.cmd = vim.deepcopy(config.cmd)
-	vim.list_extend(config.cmd, {'-v'})
-	-- TODO: factor this part into a separate file
-	-- TODO: check if the default root_dir understands our monorepo
-	-- Check for MN sterling
-	local sterling_venv = lspconfig_util.path.join(root_dir, 'nixd/opt/python3.6')
-	if lspconfig_util.path.is_dir(sterling_venv) then
-	  --print('using the sterling_venv:', sterling_venv)
-	  config.settings = vim.tbl_deep_extend('force', config.settings, {
-	    pylsp = {
-	      plugins = {
-		jedi = {
-		  environment = sterling_venv,
-		},
-		pyflakes = {
-		  enabled = false,
-		},
-		mccabe = {
-		  enabled = false,
-		},
-		pycodestyle = {
-		  enabled = false,
-		  ---[[ Using ignore made things noisier!
-		  ignore = {
-		    'E302', -- expected 2 blank lines, found 1
-		    'E305', -- expected 2 blank lines after class or function definition, found 1
-		    'E501', -- line too long (80 > 79 characters)
-		  },
-		  --]]
-		},
-	      },
-	    },
-	  })
-	end
+        config.cmd = vim.deepcopy(config.cmd)
+        vim.list_extend(config.cmd, {'-v'})
+        -- TODO: factor this part into a separate file
+        -- TODO: check if the default root_dir understands our monorepo
+        -- Check for MN sterling
+        local sterling_venv = lspconfig_util.path.join(root_dir, 'nixd/opt/python3.6')
+        if lspconfig_util.path.is_dir(sterling_venv) then
+          --print('using the sterling_venv:', sterling_venv)
+          config.settings = vim.tbl_deep_extend('force', config.settings, {
+            pylsp = {
+              plugins = {
+                jedi = {
+                  environment = sterling_venv,
+                },
+                pyflakes = {
+                  enabled = false,
+                },
+                mccabe = {
+                  enabled = false,
+                },
+                pycodestyle = {
+                  enabled = false,
+                  ---[[ Using ignore made things noisier!
+                  ignore = {
+                    'E302', -- expected 2 blank lines, found 1
+                    'E305', -- expected 2 blank lines after class or function definition, found 1
+                    'E501', -- line too long (80 > 79 characters)
+                  },
+                  --]]
+                },
+              },
+            },
+          })
+        end
       end)
 
   end
