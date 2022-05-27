@@ -104,6 +104,8 @@ require('packer').startup(function(use)
     'rcarriga/nvim-dap-ui',
     after = { 'nvim-dap' },
   }
+
+  use 'google/vim-jsonnet'
 end)
 
 -- Kg changes
