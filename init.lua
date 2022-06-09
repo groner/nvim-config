@@ -366,6 +366,29 @@ lsp_installer.on_server_ready(function(server)
       function(config, root_dir)
         config.cmd = vim.deepcopy(config.cmd)
         vim.list_extend(config.cmd, {'-v'})
+        config.settings = vim.tbl_deep_extend('force', config.settings, {
+          pylsp = {
+            plugins = {
+              pyflakes = {
+                enabled = false,
+              },
+              mccabe = {
+                enabled = false,
+              },
+              pycodestyle = {
+                enabled = false,
+                ---[[ Using ignore made things noisier!
+                ignore = {
+                  'E302', -- expected 2 blank lines, found 1
+                  'E305', -- expected 2 blank lines after class or function definition, found 1
+                  'E501', -- line too long (80 > 79 characters)
+                  'E731', -- do not assign a lambda
+                },
+                --]]
+              },
+            },
+          },
+        })
         -- TODO: factor this part into a separate file
         -- TODO: check if the default root_dir understands our monorepo
         -- Check for MN sterling
@@ -377,22 +400,6 @@ lsp_installer.on_server_ready(function(server)
               plugins = {
                 jedi = {
                   environment = sterling_venv,
-                },
-                pyflakes = {
-                  enabled = false,
-                },
-                mccabe = {
-                  enabled = false,
-                },
-                pycodestyle = {
-                  enabled = false,
-                  ---[[ Using ignore made things noisier!
-                  ignore = {
-                    'E302', -- expected 2 blank lines, found 1
-                    'E305', -- expected 2 blank lines after class or function definition, found 1
-                    'E501', -- line too long (80 > 79 characters)
-                  },
-                  --]]
                 },
               },
             },
