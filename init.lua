@@ -45,6 +45,14 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
 
   use 'EdenEast/nightfox.nvim'
+  use {
+    'meliora-theme/neovim',
+    requires = {'rktjmp/lush.nvim'},
+    config = function()
+      require('meliora').setup {
+      }
+    end,
+  }
 
   -- Theme inspired by Atom
   use 'mjlbach/onedark.nvim'
@@ -159,7 +167,7 @@ vim.wo.signcolumn = 'yes'
 
 --Set colorscheme (order is important here)
 vim.o.termguicolors = true
-vim.cmd [[colorscheme nordfox]]
+vim.cmd [[colorscheme meliora]]
 
 -- Improve cursor visibility, this fixes the cursor being hard to see when it's
 -- over the muted indent marks.
