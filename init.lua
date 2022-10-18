@@ -306,7 +306,7 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- LSP settings
-local lsp_installer = require 'nvim-lsp-installer'
+require('nvim-lsp-installer').setup {}
 local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
@@ -335,89 +335,83 @@ local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
+local lspconfig = require('lspconfig')
 local lspconfig_util = require('lspconfig.util')
 
-lsp_installer.on_server_ready(function(server)
-  local opts = {
-    on_attach = on_attach,
-    capabilities = capabilities,
-  }
+lspconfig.sumneko_lua.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+        -- Setup your lua path
+        path = runtime_path,
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = { 'vim' },
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file('', true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+}
 
-  if server.name == "sumneko_lua" then
-    opts.settings = {
-      Lua = {
-        runtime = {
-          -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-          version = 'LuaJIT',
-          -- Setup your lua path
-          path = runtime_path,
-        },
-        diagnostics = {
-          -- Get the language server to recognize the `vim` global
-          globals = { 'vim' },
-        },
-        workspace = {
-          -- Make the server aware of Neovim runtime files
-          library = vim.api.nvim_get_runtime_file('', true),
-        },
-        -- Do not send telemetry data containing a randomized but unique identifier
-        telemetry = {
-          enable = false,
+lspconfig.pylsp.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  on_new_config = function(config, root_dir)
+    config.cmd = vim.deepcopy(config.cmd)
+    vim.list_extend(config.cmd, {'-v'})
+    config.settings = vim.tbl_deep_extend('force', config.settings, {
+      pylsp = {
+        plugins = {
+          pyflakes = {
+            enabled = false,
+          },
+          mccabe = {
+            enabled = false,
+          },
+          pycodestyle = {
+            enabled = false,
+            ---[[ Using ignore made things noisier!
+            ignore = {
+              'E302', -- expected 2 blank lines, found 1
+              'E305', -- expected 2 blank lines after class or function definition, found 1
+              'E501', -- line too long (80 > 79 characters)
+              'E731', -- do not assign a lambda
+            },
+            --]]
+          },
         },
       },
-    }
-
-  elseif server.name == "pylsp" then
-    opts.on_new_config = lspconfig_util.add_hook_after(
-      opts.on_new_config,
-      function(config, root_dir)
-        config.cmd = vim.deepcopy(config.cmd)
-        vim.list_extend(config.cmd, {'-v'})
-        config.settings = vim.tbl_deep_extend('force', config.settings, {
-          pylsp = {
-            plugins = {
-              pyflakes = {
-                enabled = false,
-              },
-              mccabe = {
-                enabled = false,
-              },
-              pycodestyle = {
-                enabled = false,
-                ---[[ Using ignore made things noisier!
-                ignore = {
-                  'E302', -- expected 2 blank lines, found 1
-                  'E305', -- expected 2 blank lines after class or function definition, found 1
-                  'E501', -- line too long (80 > 79 characters)
-                  'E731', -- do not assign a lambda
-                },
-                --]]
-              },
+    })
+    -- TODO: factor this part into a separate file
+    -- TODO: check if the default root_dir understands our monorepo
+    -- Check for MN sterling
+    local sterling_venv = lspconfig_util.path.join(root_dir, 'nixd/opt/python3.6')
+    if lspconfig_util.path.is_dir(sterling_venv) then
+      --print('using the sterling_venv:', sterling_venv)
+      config.settings = vim.tbl_deep_extend('force', config.settings, {
+        pylsp = {
+          plugins = {
+            jedi = {
+              environment = sterling_venv,
             },
           },
-        })
-        -- TODO: factor this part into a separate file
-        -- TODO: check if the default root_dir understands our monorepo
-        -- Check for MN sterling
-        local sterling_venv = lspconfig_util.path.join(root_dir, 'nixd/opt/python3.6')
-        if lspconfig_util.path.is_dir(sterling_venv) then
-          --print('using the sterling_venv:', sterling_venv)
-          config.settings = vim.tbl_deep_extend('force', config.settings, {
-            pylsp = {
-              plugins = {
-                jedi = {
-                  environment = sterling_venv,
-                },
-              },
-            },
-          })
-        end
-      end)
-
-  end
-
-  server:setup(opts)
-end)
+        },
+      })
+    end
+  end,
+}
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
