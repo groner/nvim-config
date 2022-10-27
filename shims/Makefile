@@ -7,11 +7,11 @@ update-alternatives = update-alternatives
 
 install:
 	mkdir -pv $(shimdir)
-	echo >$(shimdir)/ex		'exec $(nvim) -e "$@"'
-	echo >$(shimdir)/rview		'exec $(nvim) -RZ "$@"'
-	echo >$(shimdir)/rvim		'exec $(nvim) -Z "$@"'
-	echo >$(shimdir)/view		'exec $(nvim) -R "$@"'
-	echo >$(shimdir)/vimdiff	'exec $(nvim) -d "$@"'
+	echo >$(shimdir)/ex		'exec $(nvim) -e "$$@"'
+	echo >$(shimdir)/rview		'exec $(nvim) -RZ "$$@"'
+	echo >$(shimdir)/rvim		'exec $(nvim) -Z "$$@"'
+	echo >$(shimdir)/view		'exec $(nvim) -R "$$@"'
+	echo >$(shimdir)/vimdiff	'exec $(nvim) -d "$$@"'
 
 update-alternatives:
 	$(update-alternatives)	--install /usr/bin/vim		vim	$(nvim)			100
