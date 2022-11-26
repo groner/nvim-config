@@ -85,8 +85,9 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter-textobjects'
 
   -- Collection of configurations for built-in LSP client
+  use 'williamboman/mason.nvim'
+  use 'williamboman/mason-lspconfig.nvim'
   use 'neovim/nvim-lspconfig'
-  use 'williamboman/nvim-lsp-installer'
 
   -- Autocompletion plugin
   use 'hrsh7th/nvim-cmp'
@@ -306,7 +307,13 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- LSP settings
-require('nvim-lsp-installer').setup {}
+require('mason').setup()
+require('mason-lspconfig').setup({
+  ensure_installed = {
+    'sumneko_lua',
+  },
+})
+
 local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
