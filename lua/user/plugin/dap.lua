@@ -1,16 +1,15 @@
-local function setup()
-  -- Based on https://www.reddit.com/r/neovim/comments/silikv/debugging_in_neovim/
+-- Based on https://www.reddit.com/r/neovim/comments/silikv/debugging_in_neovim/
 
-  local dap = require('dap')
-  --local uiv = require('dap.ui.variables')
-  local uiw = require('dap.ui.widgets')
-  local which_key = require('which-key')
+local dap = require('dap')
+--local uiv = require('dap.ui.variables')
+local uiw = require('dap.ui.widgets')
+local which_key = require('which-key')
 
-  local function float_scopes()
-    uiw.centered_float(uiw.scopes)
-  end
+local function float_scopes()
+  uiw.centered_float(uiw.scopes)
+end
 
-  which_key.register({
+which_key.register({
     d = {
       name = "Debug",
       s = {
@@ -51,9 +50,3 @@ local function setup()
       --i = { dap.toggle, "Toggle" },
     },
   }, { prefix = "<leader>" })
-end
-
-
-return {
-  setup = setup,
-}
