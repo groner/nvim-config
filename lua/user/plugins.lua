@@ -11,17 +11,24 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
 end
 
 -- Auto reload
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost init.lua,plugins.lua source <afile> | PackerSync
-  augroup end
-]])
+local cfg_dir = vim.fn.fnamemodify(vim.env.MYVIMRC, ':h')
+local lua_user_dir = cfg_dir .. '/lua/user'
+vim.cmd(
+  string.gsub([[
+    augroup packer_user_config
+      autocmd!
+      autocmd BufWritePost $MYVIMRC source <afile> | PackerCompile
+      autocmd BufWritePost $LUA_USER_DIR/plugins.lua source <afile> | PackerSync
+    augroup end
+  ]],
+  '%$([%w_]+)', {
+    MYVIMRC=vim.env.MYVIMRC,
+    LUA_USER_DIR=lua_user_dir,
+  }))
 
 local file_config = function(name)
   -- NOTE: expand('$MYVIMRC') works, but expand('$MYVIMRC:p') does not
-  local cfg_dir = vim.fn.fnamemodify(vim.env.MYVIMRC, ':h')
-  local cfg_file = cfg_dir .. '/lua/user/plugin/' .. name .. '.lua'
+  local cfg_file = lua_user_dir .. '/plugin/' .. name .. '.lua'
   return string.format([[
       local cfg_file = %q
       if vim.fn.filereadable(cfg_file) then
