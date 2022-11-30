@@ -55,6 +55,11 @@ packer.startup({
     }
   },
   function(use)
+    local LIB = {
+      plenary = 'nvim-lua/plenary.nvim',
+      lush = 'rktjmp/lush.nvim',
+    }
+
     -- Package manager
     use 'wbthomason/packer.nvim'
 
@@ -81,27 +86,23 @@ packer.startup({
     use 'tpope/vim-surround'
 
     -- UI to select things (files, grep results, open buffers...)
-    use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+    use { 'nvim-telescope/telescope.nvim', requires = { LIB.plenary } }
 
     use 'EdenEast/nightfox.nvim'
     use {
       'meliora-theme/neovim',
-      requires = {'rktjmp/lush.nvim'},
+      requires = { LIB.lush },
       config = dummy_setup_config('meliora'),
     }
 
     -- Theme inspired by Atom
     use 'mjlbach/onedark.nvim'
     -- Fancier statusline
-    use {
-      'nvim-lualine/lualine.nvim',
-      after = { 'nvim-dap' },
-      config = file_config('lualine'),
-    }
+    use 'nvim-lualine/lualine.nvim'
     -- Add indentation guides even on blank lines
     use 'lukas-reineke/indent-blankline.nvim'
     -- Add git related info in the signs columns and popups
-    use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+    use { 'lewis6991/gitsigns.nvim', requires = { LIB.plenary } }
 
     -- Highlight, edit, and navigate code using a fast incremental parsing library
     use 'nvim-treesitter/nvim-treesitter'
@@ -121,22 +122,9 @@ packer.startup({
     use 'L3MON4D3/LuaSnip'
 
     -- Debug Adapter Protocol
-    use {
-      'mfussenegger/nvim-dap',
-      after = { 'which-key.nvim' },
-      config = file_config('dap'),
-    }
-    use {
-      'mfussenegger/nvim-dap-python',
-      after = { 'nvim-dap' },
-      -- Don't use dummy_setup_config here, dap-python.setup expects an
-      -- optional string, not a table
-      config = [[require('dap-python').setup()]],
-    }
-    use {
-      'rcarriga/nvim-dap-ui',
-      after = { 'nvim-dap' },
-    }
+    use 'mfussenegger/nvim-dap'
+    use 'mfussenegger/nvim-dap-python'
+    use 'rcarriga/nvim-dap-ui'
 
     use 'google/vim-jsonnet'
 

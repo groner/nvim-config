@@ -3,8 +3,10 @@ require 'user.plugins'
 require 'user.options'
 
 require 'user.cmp'
+require 'user.dap'
 require 'user.gitsigns'
 require 'user.lsp'
+require 'user.lualine'
 require 'user.telescope'
 require 'user.treesitter'
 

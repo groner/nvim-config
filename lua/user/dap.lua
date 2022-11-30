@@ -1,9 +1,9 @@
 -- Based on https://www.reddit.com/r/neovim/comments/silikv/debugging_in_neovim/
 
-local dap = require('dap')
---local uiv = require('dap.ui.variables')
-local uiw = require('dap.ui.widgets')
-local which_key = require('which-key')
+local dap = require 'dap'
+--local uiv = require 'dap.ui.variables'
+local uiw = require 'dap.ui.widgets'
+local which_key = require 'which-key'
 
 local function float_scopes()
   uiw.centered_float(uiw.scopes)
@@ -50,3 +50,7 @@ which_key.register({
       --i = { dap.toggle, "Toggle" },
     },
   }, { prefix = "<leader>" })
+
+local dap_python = require 'dap-python'
+
+dap_python.setup()
