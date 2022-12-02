@@ -16,6 +16,8 @@ vim.cmd [[
   augroup Kai
     au!
 
+    au BufRead Jenkinsfile             setf groovy
+
     au FileType html,xml                setl sw=2
     au FileType css                     setl sw=2
     au FileType javascript,typescript,typescriptreact setl sw=2
