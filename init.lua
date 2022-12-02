@@ -6,6 +6,7 @@ require 'user.keymaps'
 require 'user.cmp'
 require 'user.dap'
 require 'user.gitsigns'
+require 'user.indent_blankline'
 require 'user.lsp'
 require 'user.lualine'
 require 'user.telescope'
@@ -32,11 +33,5 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
-
--- Indent blankline
-require('indent_blankline').setup {
-  char = '┊',
-  show_trailing_blankline_indent = false,
-}
 
 -- vim: sw=2 et
