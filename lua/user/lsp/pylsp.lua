@@ -1,4 +1,8 @@
-local lspconfig = require 'lspconfig'
+local ok, lspconfig = pcall(require, 'lspconfig')
+if not ok then
+  return
+end
+
 local lspconfig_util = require 'lspconfig.util'
 
 local common = require 'user.lsp.common'

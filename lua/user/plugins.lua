@@ -41,7 +41,10 @@ local dummy_setup_config = function(name)
   -- It would be nice to be able to proxy at least a simple map here, but lua
   -- doesn't make anything that easy
   return string.format([[
-    require(%q).setup({})
+    local ok, plugin = pcall(require, %q)
+    if ok then
+      plugin.setup({})
+    end
   ]], name)
 end
 
@@ -89,8 +92,11 @@ packer.startup({
     use { 'nvim-telescope/telescope.nvim', requires = { LIB.plenary } }
 
     use 'EdenEast/nightfox.nvim'
+    -- Load lush, so dependent themes are not deferred
+    use { LIB.lush }
     use {
       'meliora-theme/neovim',
+      as = 'meliora-theme',
       requires = { LIB.lush },
       config = dummy_setup_config('meliora'),
     }
@@ -107,7 +113,10 @@ packer.startup({
     -- Highlight, edit, and navigate code using a fast incremental parsing library
     use 'nvim-treesitter/nvim-treesitter'
     -- Additional textobjects for treesitter
-    use 'nvim-treesitter/nvim-treesitter-textobjects'
+    -- This generates an error during initial installation, if nvim-treesitter
+    -- isn't already installed.  I'm still not sure after is safe to use, but
+    -- this seems to fix that issue.
+    use { 'nvim-treesitter/nvim-treesitter-textobjects', after = { LIB.treesitter } }
 
     -- Collection of configurations for built-in LSP client
     use 'williamboman/mason.nvim'
