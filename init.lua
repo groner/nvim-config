@@ -16,7 +16,9 @@ vim.cmd [[
   augroup Kai
     au!
 
-    au BufRead Jenkinsfile             setf groovy
+    au BufRead Jenkinsfile              setf groovy
+    au BufNewFile,BufRead *.tf          setf terraform
+    au BufRead authorized_keys          setl tw=0
 
     au FileType html,xml                setl sw=2
     au FileType css                     setl sw=2
