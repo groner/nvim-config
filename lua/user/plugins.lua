@@ -13,11 +13,6 @@ vim.opt.runtimepath:prepend(lazypath)
 
 -- Plugins
 local lazy_opts = {
-  install = {
-    colorscheme = {
-      'mellifluous',
-    },
-  },
 }
 require('lazy').setup({
     -- Git commands in nvim
