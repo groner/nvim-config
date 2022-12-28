@@ -37,10 +37,6 @@ vim.wo.signcolumn = 'yes'
 
 --Set colorscheme (order is important here)
 vim.o.termguicolors = true
-local ok, _ = pcall(require, 'meliora')
-if ok then
-  vim.cmd [[colorscheme meliora]]
-end
 
 -- Improve cursor visibility, this fixes the cursor being hard to see when it's
 -- over the muted indent marks.

@@ -1,143 +1,99 @@
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  PACKER_BOOTSTRAP = vim.fn.system({
-    'git', 'clone',
-      'https://github.com/wbthomason/packer.nvim',
-      install_path
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "--single-branch",
+    "https://github.com/folke/lazy.nvim.git",
+    lazypath,
   })
-  vim.cmd([[packadd packer.nvim]])
 end
-
--- Auto reload
-local cfg_dir = vim.fn.fnamemodify(vim.env.MYVIMRC, ':h')
-local lua_user_dir = cfg_dir .. '/lua/user'
-vim.cmd(
-  string.gsub([[
-    augroup packer_user_config
-      autocmd!
-      autocmd BufWritePost $MYVIMRC source <afile> | PackerCompile
-      autocmd BufWritePost $LUA_USER_DIR/plugins.lua source <afile> | PackerSync
-    augroup end
-  ]],
-  '%$([%w_]+)', {
-    MYVIMRC=vim.env.MYVIMRC,
-    LUA_USER_DIR=lua_user_dir,
-  }))
-
-local file_config = function(name)
-  -- NOTE: expand('$MYVIMRC') works, but expand('$MYVIMRC:p') does not
-  local cfg_file = lua_user_dir .. '/plugin/' .. name .. '.lua'
-  return string.format([[
-      local cfg_file = %q
-      if vim.fn.filereadable(cfg_file) then
-	dofile(cfg_file)
-      end
-    ]], cfg_file)
-end
-
-local dummy_setup_config = function(name)
-  -- It would be nice to be able to proxy at least a simple map here, but lua
-  -- doesn't make anything that easy
-  return string.format([[
-    local ok, plugin = pcall(require, %q)
-    if ok then
-      plugin.setup({})
-    end
-  ]], name)
-end
+vim.opt.runtimepath:prepend(lazypath)
 
 -- Plugins
-local packer = require('packer')
-
-packer.startup({
-  config = {
-    display = {
-      open_fn = require('packer.util').float,
-    }
+local lazy_opts = {
+  install = {
+    colorscheme = {
+      'mellifluous',
+    },
   },
-  function(use)
-    local LIB = {
-      plenary = 'nvim-lua/plenary.nvim',
-      lush = 'rktjmp/lush.nvim',
-    }
-
-    -- Package manager
-    use 'wbthomason/packer.nvim'
-
+}
+require('lazy').setup({
     -- Git commands in nvim
-    use 'tpope/vim-fugitive'
+    'tpope/vim-fugitive',
     -- Fugitive-companion to interact with github
-    use 'tpope/vim-rhubarb'
+    'tpope/vim-rhubarb',
     -- "gc" to comment visual regions/lines
-    use {
+    {
       'numToStr/Comment.nvim',
-      config = dummy_setup_config('Comment'),
-    }
+      config = true,
+    },
 
     -- Which key
-    use {
+    {
       'folke/which-key.nvim',
-      config = dummy_setup_config('which-key'),
-    }
+      config = true,
+    },
 
     -- Enable repeating supported plugin maps with "."
-    use 'tpope/vim-repeat'
+    'tpope/vim-repeat',
     -- Pairs of handy bracket mappings
-    use 'tpope/vim-unimpaired'
-    use 'tpope/vim-surround'
+    'tpope/vim-unimpaired',
+    'tpope/vim-surround',
+
+    -- Used by telescope and gitsigns
+    'nvim-lua/plenary.nvim',
 
     -- UI to select things (files, grep results, open buffers...)
-    use { 'nvim-telescope/telescope.nvim', requires = { LIB.plenary } }
+    'nvim-telescope/telescope.nvim',
 
-    use 'EdenEast/nightfox.nvim'
-    -- Load lush, so dependent themes are not deferred
-    use { LIB.lush }
-    use {
-      'meliora-theme/neovim',
-      as = 'meliora-theme',
-      requires = { LIB.lush },
-      config = dummy_setup_config('meliora'),
-    }
+    'EdenEast/nightfox.nvim',
+    -- Used by mellifluous theme
+    'rktjmp/lush.nvim',
+    {
+      'ramojus/mellifluous.nvim',
+      name = 'mellifluous',
+      priority = 1000,
+      config = function()
+	require('mellifluous').setup()
+	vim.cmd 'colorscheme mellifluous'
+      end,
+    },
 
     -- Theme inspired by Atom
-    use 'mjlbach/onedark.nvim'
+    'mjlbach/onedark.nvim',
     -- Fancier statusline
-    use 'nvim-lualine/lualine.nvim'
+    'nvim-lualine/lualine.nvim',
     -- Add indentation guides even on blank lines
-    use 'lukas-reineke/indent-blankline.nvim'
+    'lukas-reineke/indent-blankline.nvim',
     -- Add git related info in the signs columns and popups
-    use { 'lewis6991/gitsigns.nvim', requires = { LIB.plenary } }
+    'lewis6991/gitsigns.nvim',
 
     -- Highlight, edit, and navigate code using a fast incremental parsing library
-    use 'nvim-treesitter/nvim-treesitter'
+    'nvim-treesitter/nvim-treesitter',
     -- Additional textobjects for treesitter
     -- This generates an error during initial installation, if nvim-treesitter
     -- isn't already installed.  I'm still not sure after is safe to use, but
     -- this seems to fix that issue.
-    use { 'nvim-treesitter/nvim-treesitter-textobjects', after = { LIB.treesitter } }
+    { 'nvim-treesitter/nvim-treesitter-textobjects' },
 
     -- Collection of configurations for built-in LSP client
-    use 'williamboman/mason.nvim'
-    use 'williamboman/mason-lspconfig.nvim'
-    use 'neovim/nvim-lspconfig'
+    'williamboman/mason.nvim',
+    'williamboman/mason-lspconfig.nvim',
+    'neovim/nvim-lspconfig',
 
     -- Autocompletion plugin
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'saadparwaiz1/cmp_luasnip'
+    'hrsh7th/nvim-cmp',
+    'hrsh7th/cmp-nvim-lsp',
+    'saadparwaiz1/cmp_luasnip',
     -- Snippets plugin
-    use 'L3MON4D3/LuaSnip'
+    'L3MON4D3/LuaSnip',
 
     -- Debug Adapter Protocol
-    use 'mfussenegger/nvim-dap'
-    use 'mfussenegger/nvim-dap-python'
-    use 'rcarriga/nvim-dap-ui'
+    'mfussenegger/nvim-dap',
+    'mfussenegger/nvim-dap-python',
+    'rcarriga/nvim-dap-ui',
 
-    use 'google/vim-jsonnet'
-
-    if PACKER_BOOTSTRAP then
-      packer.sync()
-    end
-  end})
+    'google/vim-jsonnet',
+}, lazy_opts)
