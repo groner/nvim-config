@@ -1,5 +1,6 @@
 require 'user.lsp.pylsp'
 require 'user.lsp.sumneko_lua'
+require 'user.lsp.typescript'
 
 local ok, mason = pcall(require, 'mason')
 if not ok then
