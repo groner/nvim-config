@@ -1,3 +1,11 @@
+--[[
+  NOTE: telescope has good enough performance in large file trees, but isn't
+  aware of things like .gitignore. Installing fd is highly recommended for
+  this purpose.
+  :; apt install fd-find
+  :; brew install fd
+--]]
+
 local ok, telescope = pcall(require, 'telescope')
 if not ok then
   return
