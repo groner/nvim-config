@@ -76,6 +76,10 @@ require('lazy').setup({
     -- Collection of configurations for built-in LSP client
     'williamboman/mason.nvim',
     'williamboman/mason-lspconfig.nvim',
+    {
+      'folke/neodev.nvim',
+      config = true,
+    },
     'neovim/nvim-lspconfig',
 
     -- Autocompletion plugin
