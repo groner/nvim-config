@@ -13,6 +13,23 @@ vim.opt.runtimepath:prepend(lazypath)
 
 -- Plugins
 local lazy_opts = {
+  -- Updated from folke/lazy.nvim README 2023-01-17
+  ui = {
+    icons = {
+      cmd = "⌘",
+      config = "🛠",
+      event = "📅",
+      ft = "📂",
+      init = "⚙",
+      keys = "🗝",
+      plugin = "🔌",
+      runtime = "💻",
+      source = "📄",
+      start = "🚀",
+      task = "📌",
+      lazy = "💤 ",
+    },
+  },
 }
 require('lazy').setup({
     -- Git commands in nvim
