@@ -42,6 +42,16 @@ require('lazy').setup({
       config = true,
     },
 
+    -- Session management
+    {
+      'rmagatti/auto-session',
+      config = true,
+    },
+    {
+      'rmagatti/session-lens',
+      config = true,
+    },
+
     -- Which key
     {
       'folke/which-key.nvim',

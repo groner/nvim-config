@@ -44,3 +44,5 @@ keymap('n', '<leader>so', function()
   telescope_builtin.tags { only_current_buffer = true }
 end)
 keymap('n', '<leader>?', telescope_builtin.oldfiles)
+
+telescope.load_extension('session-lens')
