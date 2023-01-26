@@ -1,3 +1,4 @@
+require 'user.lsp.jsonls'
 require 'user.lsp.pylsp'
 require 'user.lsp.sumneko_lua'
 require 'user.lsp.typescript'
