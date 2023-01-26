@@ -29,7 +29,7 @@ end
 
 -- nvim-cmp supports additional completion capabilities
 local ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
-if not ok then
+if ok then
   M.capabilities = cmp_nvim_lsp.default_capabilities()
 end
 
