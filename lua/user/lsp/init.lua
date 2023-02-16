@@ -1,7 +1,7 @@
 require 'user.lsp.groovyls'
 require 'user.lsp.jsonls'
 require 'user.lsp.pylsp'
-require 'user.lsp.sumneko_lua'
+require 'user.lsp.lua_ls'
 require 'user.lsp.typescript'
 
 local ok, mason = pcall(require, 'mason')
@@ -18,6 +18,6 @@ end
 
 mason_lspconfig.setup {
   ensure_installed = {
-    'sumneko_lua',
+    'lua_ls',
   },
 }
