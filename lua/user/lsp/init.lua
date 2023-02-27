@@ -2,6 +2,7 @@ require 'user.lsp.groovyls'
 require 'user.lsp.jsonls'
 require 'user.lsp.pylsp'
 require 'user.lsp.lua_ls'
+require 'user.lsp.terraformls'
 require 'user.lsp.typescript'
 
 local ok, mason = pcall(require, 'mason')
