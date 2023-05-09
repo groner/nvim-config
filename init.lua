@@ -19,6 +19,7 @@ vim.cmd [[
     au BufRead Jenkinsfile              setf groovy
     au BufNewFile,BufRead *.tf          setf terraform
     au BufRead authorized_keys          setl tw=0
+    au BufRead *.jade                   setf pug
 
     au FileType html,xml                setl sw=2
     au FileType css                     setl sw=2
