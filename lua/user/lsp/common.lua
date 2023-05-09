@@ -24,7 +24,7 @@ M.on_attach = function(_, bufnr)
   if telescope_builtin ~= nil then
     vim.keymap.set('n', '<leader>so', telescope_builtin.lsp_document_symbols, opts)
   end
-  vim.api.nvim_buf_create_user_command(bufnr, "Format", vim.lsp.buf.formatting, {})
+  vim.api.nvim_buf_create_user_command(bufnr, "Format", function() vim.lsp.buf.format({async=true}) end, {})
 end
 
 -- nvim-cmp supports additional completion capabilities
