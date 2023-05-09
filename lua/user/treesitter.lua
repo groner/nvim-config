@@ -18,6 +18,7 @@ ts_configs.setup {
   },
   indent = {
     enable = true,
+    disable = {'python'}
   },
   textobjects = {
     select = {
