@@ -123,4 +123,8 @@ require('lazy').setup({
     'rcarriga/nvim-dap-ui',
 
     'google/vim-jsonnet',
+
+    -- mako templates
+    'sophacles/vim-bundle-mako',
+
 }, lazy_opts)
