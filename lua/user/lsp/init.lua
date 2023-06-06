@@ -1,6 +1,6 @@
 require 'user.lsp.jsonls'
-require 'user.lsp.pylsp'
 require 'user.lsp.lua_ls'
+require 'user.lsp.pylsp'
 require 'user.lsp.terraformls'
 require 'user.lsp.typescript'
 
