@@ -1,4 +1,3 @@
-require 'user.lsp.groovyls'
 require 'user.lsp.jsonls'
 require 'user.lsp.pylsp'
 require 'user.lsp.lua_ls'
