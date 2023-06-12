@@ -1,3 +1,4 @@
+require 'user.lsp.eslint'
 require 'user.lsp.jsonls'
 require 'user.lsp.lua_ls'
 require 'user.lsp.pylsp'
