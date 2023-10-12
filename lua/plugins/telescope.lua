@@ -23,8 +23,10 @@ return {
         layout_strategy = "flex",
         layout_config = {
           -- flex
-          flip_lines = 70,
-          flip_columns = 200,
+          flex = {
+            flip_lines = 70,
+            flip_columns = 200,
+          },
 
           horizontal = {
             preview_width = 0.5,
